@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>函数</title>
+</head>
+
+<body>
+  <button>hdcms</button>
+  <button>houdunren</button>
+
+  <script>
+    function show() {
+      alert(this.innerHTML)
+    }
+    let buttons = document.querySelectorAll("button");
+    for (let i = 0; i < buttons.length; i++) {
+      buttons[i].addEventListener("click", event => {
+        show.call(event.target); // 这里将当前的DOM元素传递给show函数中的this指针
+      });
+    }
+
+
+    function Request() {
+      this.get = function (params = {}) {
+        console.log(Object.keys(params)); // 将对象属性作为列表元素返回  ["id", "js"]
+        //组合请求参数
+        let option = Object.keys(params)
+          .map(k => k + "=" + params[k])
+          .join("&");
+
+        return `获取数据 API:${this.url}?${option}`;
+      };
+    }
+
+    //文章控制器
+    function Article() {
+      this.url = "https://houdunren.com";
+      Request.apply(this, []); // 这里this指当前对象，传递给构造函数Request中的this，这样就复用了Request中的get方法
+    }
+    let hd = new Article();
+    console.log(
+      hd.get({
+        row: 10,
+        start: 3
+      })
+    );
+    //课程控制器
+    function Lesson() {
+      this.url = "https://api.houdunren.com";
+      Request.call(this); // 这里this指当前对象，传递给构造函数Request中的this，这样就复用了Request中的get方法
+    }
+    let js = new Lesson();
+    console.log(
+      js.get({
+        row: 20
+      })
+    );
+
+  </script>
+</body>
+
+</html>

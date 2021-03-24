@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作用域与闭包</title>
+  <style>
+    button {
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <button message="hdcms">hdcms</button>
+
+  <script>
+    let btns = document.querySelectorAll("button");
+
+    // 这种方式当我们第二次点击按钮时会发生抖动，
+    // btns.forEach(function(item) {
+    //   item.addEventListener("click", function() { // 每次点击时会产生一个新的作用域，产生left和setInterval，但操作的是同一个button元素
+    //     let left = 1;
+    //     setInterval(function() {
+    //       item.style.left = left++ + "px";
+    //     }, 10);
+    //   });
+    // });
+
+    // 第一种解决方案, 将left放到父级函数的作用域，但是多次点击，按钮移动会加快
+    // btns.forEach(function(item) {
+    //   let left = 1;
+    //   item.addEventListener("click", function() { // 每次点击也会产生新的作用域，产生多个setInterval函数
+    //     setInterval(function() {
+    //       item.style.left = left++ + "px";
+    //       console.log(left);
+    //     }, 10);
+    //   });
+    // });
+
+    // 设置一个变量interval, 初始为false，第一次点击时设为true
+    // btns.forEach(function(item) {
+    //   let left = 1;
+    //   let interval = false;
+    //   item.addEventListener("click", function() { // 多次点击根据闭包特性会去找到外部作用域的interval，不会产生多次setInterval
+    //     if (!interval) {
+    //       interval = true;
+    //       setInterval(function() {
+    //         item.style.left = left++ + "px";
+    //       }, 10);
+    //     }
+    //   });
+    // });
+
+    // 最终方案
+    btns.forEach(function(item) {
+      let bind = false;
+      item.addEventListener("click", function() { // 多次点击虽然会有新作用域，但是不会产生额外数据，只有最开始点击产生的left和setInterval
+        if (!bind) {
+          let left = 1;
+          bind = setInterval(function() {
+            item.style.left = left++ + "px";
+          }, 10);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

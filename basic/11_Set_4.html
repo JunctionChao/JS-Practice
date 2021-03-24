@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      padding: 200px;
+    }
+
+    ul {
+      list-style: none;
+      display: flex;
+      width: 200px;
+      flex-direction: column;
+    }
+
+    li {
+      height: 30px;
+      border: solid 2px #e67e22;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 10px;
+      color: #333;
+      transition: 1s;
+    }
+
+    a {
+      border-radius: 3px;
+      width: 20px;
+      height: 20px;
+      text-decoration: none;
+      text-align: center;
+      background: #16a085;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 5px;
+    }
+
+    .remove {
+      border: solid 2px #eee;
+      opacity: 0.8;
+      color: #eee;
+    }
+
+    .remove a {
+      background: #eee;
+    }
+  </style>
+</head>
+
+<body>
+  <ul>
+    <li>houdunren.com <a href="javascript:;">x</a></li>
+    <li>hdcms.com <a href="javascript:;">x</a></li>
+    <li>houdunwang.com <a href="javascript:;">x</a></li>
+  </ul>
+  <script>
+    class Todo {
+      constructor() {
+        this.items = document.querySelectorAll("ul>li");
+        // console.log(this.items);
+        this.list = new WeakSet();
+        this.items.forEach(item => {
+          this.list.add(item);
+        });
+        console.log(this.list);
+      }
+      run() {
+        this.addEvent();
+      }
+      addEvent() {
+        this.items.forEach(item => {
+          let a = item.querySelector("a"); // 找到a元素
+          a.addEventListener("click", event => {
+            const parentElement = event.target.parentElement; // 找到父级元素
+            if (this.list.has(parentElement)) {
+              parentElement.classList.add("remove");
+              this.list.delete(parentElement);
+            } else {
+              parentElement.classList.remove("remove");
+              this.list.add(parentElement);
+            }
+          })
+
+        })
+      }
+    }
+
+    new Todo().run();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>变量提升</title>
+</head>
+<body>
+    
+    <script>
+        // 解析器会先解析代码，然后把声明的变量的声明提升到最前，这就叫做变量提升
+        console.log(a); // undefined
+        var a = 1;
+        console.log(a);  // 1
+
+        // 即使在执行过程中if(false)不执行，但在其中定义的var也会在解析时发生变量提升
+        function hd() {
+            if (false) {
+                var web = "后盾人";
+            }
+            console.log(web); // undefined
+        }
+        hd();
+
+        // 使用let/const 声明的变量在声明前存在临时性死区（TDZ）使用会发生错误
+        console.log(x); // Cannot access 'x' before initialization
+        let x = 1;
+
+        // 使用let/const必须声明后才能使用，更符合使用习惯
+        let web = 'houdunren.com';
+        console.log(web);
+
+    </script>
+</body>
+</html>

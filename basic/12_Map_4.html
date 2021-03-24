@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      padding: 20px;
+      width: 100vw;
+      display: flex;
+      box-sizing: border-box;
+    }
+
+    div {
+      border: solid 2px #ddd;
+      padding: 10px;
+      flex: 1;
+    }
+
+    div:last-of-type {
+      margin-left: -2px;
+    }
+
+    ul {
+      list-style: none;
+      display: flex;
+      width: 200px;
+      flex-direction: column;
+    }
+
+    li {
+      height: 30px;
+      border: solid 2px #e67e22;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 10px;
+      color: #333;
+      transition: 1s;
+    }
+
+    a {
+      border-radius: 3px;
+      width: 20px;
+      height: 20px;
+      text-decoration: none;
+      text-align: center;
+      background: #16a085;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 5px;
+    }
+
+    .remove {
+      border: solid 2px #eee;
+      opacity: 0.8;
+      color: #eee;
+    }
+
+    .remove a {
+      background: #eee;
+    }
+
+    p {
+      margin-top: 20px;
+    }
+
+    p span {
+      display: inline-block;
+      background: #16a085;
+      padding: 5px;
+      color: white;
+      margin-right: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <ul>
+      <li><span>css</span> <a href="javascript:;">+</a></li>
+      <li><span>js</span> <a href="javascript:;">+</a></li>
+      <li><span>python</span><a href="javascript:;">+</a></li>
+    </ul>
+  </div>
+  <div>
+    <strong id="count">共选了 门课</strong>
+    <p id="lists"></p>
+  </div>
+  <script>
+    class Lesson {
+      constructor() {
+        this.lis = document.querySelectorAll("ul>li");
+        this.countELem = document.getElementById("count");
+        this.listElem = document.getElementById("lists");
+        this.map = new WeakMap();
+      }
+
+      run() {
+        this.lis.forEach(li => {
+          li.querySelector("a").addEventListener("click", (event) => {
+            const a = event.target;
+            const state = li.getAttribute("select");
+            // 有select属性说明已经添加
+            if (state) {
+              li.removeAttribute("select");
+              this.map.delete(li); // 这里this指向当前对象
+              a.innerHTML = "+";
+              a.style.backgroundColor = "green";
+            } else {
+              li.setAttribute("select", true);
+              this.map.set(li);
+              a.innerHTML = "-";
+              a.style.backgroundColor = "red";
+            }
+            // console.log(this.map);
+            this.render();
+          });
+        })
+      }
+
+      // 这里WeakMap没有size属性
+      count() {
+        return [...this.lis].reduce((count, item) => {
+          return (count += this.map.has(item) ? 1 : 0);
+        }, 0);
+      }
+
+      lists() {
+        let lis = [...this.lis].filter(li => {
+          return this.map.has(li);
+        }).map(li =>{
+          return `<span>${li.querySelector("span").innerHTML}</span>`;
+        }).join("");
+        return lis;
+      }
+
+      render() {
+        this.countELem.innerHTML = `共选了${this.count()}门课`;
+        this.listElem.innerHTML = this.lists();
+      }
+    }
+
+    new Lesson().run();
+  </script>
+</body>
+
+</html>

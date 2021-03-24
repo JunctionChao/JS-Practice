@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div></div>
+  <div></div>
+  <script>
+    // 获取Set交集
+    let hd = new Set(['hdcms', 'houdunren']);
+    let cms = new Set(['后盾人', 'hdcms']);
+    let newSet = new Set(
+      [...hd].filter(item => cms.has(item))
+    );
+    console.log(newSet); // {"hdcms"}
+    // 差集
+    // 在集合a中出现但不在集合b中出现元素集合
+    newSet = new Set(
+      [...hd].filter(item => !cms.has(item))
+    );
+    console.log(newSet); // {"houdunren"}
+    // 并集
+    newSet = new Set([...hd, ...cms]);
+    console.log(newSet); // {"hdcms", "houdunren", "后盾人"}
+
+    // WeakSet 结构同样不会存储重复的值，它的成员必须只能是对象类型的值。
+    // 垃圾回收不考虑WeakSet，即被WeakSet引用时引用计数器不加一，所以对象不被引用时不管WeakSet是否在使用都将删除
+    // 因为WeakSet 是弱引用，由于其他地方操作成员可能会不存在，所以不可以进行forEach( )遍历等操作
+    // 也是因为弱引用，WeakSet 结构没有keys( )，values( )，entries( )等方法和size属性
+    // 因为是弱引用所以当外部引用删除时，希望自动删除数据时使用 WeakMap
+    let set = new WeakSet();
+    set.add(['hdcms', 'houdunren']); // 添加的是对象
+
+    let nodes = new WeakSet();
+    document.querySelectorAll("div").forEach(function (item) {
+      nodes.add(item);
+    });
+    console.log(nodes); // WeakSet {div, div}
+
+    // 对象引用计数进行内存管理
+    let obj1 = { name: "张三" }; // 对象引用计数器 +1
+    let obj2 = obj1;
+    let arr = [obj1];
+    obj1 = null; // 对象引用计数减一
+    obj2 = null;
+    console.log(arr[0]); // {name: "张三"}
+    arr[0] = null;
+    console.log(arr[0]); // null
+
+    // WeakSet 不参与引用计数器
+    obj1 = { name: "张三" }; // 对象引用计数器 +1
+    obj2 = obj1;
+    let weakSet = new WeakSet();
+    weakSet.add(obj1); // 引用计数器不会加一
+    obj1 = null;
+    obj2 = null;
+    console.log(weakSet); // 直接输出有可能还有数据可能是没有到系统的内存回收周期
+    setTimeout(() => {
+      console.log(weakSet);
+    }, 5000); // 延迟输出
+
+  </script>
+</body>
+
+</html>

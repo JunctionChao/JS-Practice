@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>循环练习</title>
+</head>
+
+<body>
+  <script>
+    // 隔行函数
+    function interleave() {
+      // for (let i = 30; i > 0; i--) {
+      //   document.write('-');
+      // }
+      document.write('-'.repeat(30));
+      document.write("<br/>");
+    }
+
+    // do while
+    function hd(row = 5) {
+      let start = 0;
+      do {
+        let n = 0;
+        do {
+          document.write("*");
+        } while (++n <= start);
+        document.write("<br/>");
+      } while (++start <= row);
+    }
+    hd();
+
+    interleave();
+
+    for (let i = 10; i > 0; i--) {
+      for (let n = 0; n < i; n++) {
+        document.write('*');
+      }
+      document.write("<br/>")
+    }
+
+    // 标签(label) 为程序定义位置，可以使用continue/break跳到该位置。
+    // 下面取i+n 大于15时退出循环
+    houdunren: for (let i = 1; i <= 10; i++) {
+      hdcms: for (let n = 1; n <= 10; n++) {
+        if (n % 2 != 0) {
+          continue hdcms;
+        }
+        console.log(i, n);
+        if (i + n > 15) {
+          break houdunren;
+        }
+      }
+    }
+
+    interleave();
+
+    // for/in   用于遍历对象的所有属性，for/in主要用于遍历对象，不建议用来遍历数组。
+    // 遍历对象操作
+    let info = {
+      name: "后盾人",
+      url: "houdunren.com"
+    };
+    for (const key in info) {
+      if (info.hasOwnProperty(key)) {
+        console.log(info[key]);
+      }
+    }
+
+    // 遍历window对象的所有属性
+    // for (name in window) {
+    //   console.log(window[name]);
+    // }
+
+    // for/of 用来遍历 Arrays（数组）, Strings（字符串）, Maps（映射）, Sets（集合）等可迭代的数据结构。
+    // 与 for/in 不同的是 for/of 每次循环取其中的值而不是索引
+    // for/in 若是用来遍历数组则循环取其中的索引
+    let arr = [1, 2, 3];
+    for (const iterator of arr) {
+        console.log(iterator);
+    }
+
+    // 使用迭代特性遍历数组
+    const arr2 = ["hdcms", "houdunren"];
+    for (const [key, value] of arr2.entries()) {
+      console.log(key, value); // 0, "hdcms"
+    }
+
+  </script>
+</body>
+
+</html>

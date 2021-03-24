@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>类型检测</title>
+</head>
+
+<body>
+  <script>
+    // typeof 用于返回以下原始类型
+    // 基本类型：number/string/boolean
+    // function
+    // object
+    // undefined
+
+    let a = 1;
+    console.log(typeof a); //number
+
+    let b = "1";
+    console.log(typeof b); //string
+
+    //未赋值或不存在的变量返回undefined
+    let hd;
+    console.log(typeof hd); // undefined
+
+    function run() {}
+    console.log(typeof run); //function
+
+    let c = [1, 2, 3];
+    console.log(typeof c); //object
+
+    let d = { name: "houdunren.com" };
+    console.log(typeof d); //object
+
+
+    // instanceof 运算符用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链上。
+    // 也可以理解为是否为某个对象的实例，typeof不能区分数组，但instanceof则可以。
+    let arr = [];
+    let houdunren = {};
+    console.log(arr instanceof Array); //true
+    console.log(houdunren instanceof Array); //false
+
+    let arr2 = [1, 2, 3];
+    console.log(arr2 instanceof Array); //true
+
+    let d1 = { name: "houdunren.com" };
+    console.log(d1 instanceof Object); //true
+
+    function User() {}
+    let u = new User();
+    console.log(u instanceof User); //true
+
+    // 值类型与对象
+    // 使用字面量与对象方法创建字符串，返回的是不同类型。
+    let str = "houdunren";
+    let cms = new String("hdcms"); 
+    console.log(typeof str, typeof cms); //string object
+    // 只有对象才有方法使用，但在JS中也可以使用值类型调用方法，因为它会在执行时将值类型转为对象
+    console.log(str.length); //9
+    console.log(cms.length); //5
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数组练习</title>
+  <style>
+    body {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #2c3e50;
+    }
+
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    div {
+      color: #9b59b6;
+      font-size: 5em;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    div > span {
+      position: relative;
+      display: inline-block;
+    }
+    .changeColor {
+      animation-name: changeColor;
+      animation-duration: 1s;
+      animation-direction: alternate;
+      animation-iteration-count: 2;
+      animation-timing-function: linear;
+    }
+    @keyframes changeColor {
+      50% {
+        color: #f1c40f;
+        transform: scale(1.5);
+      }
+      to {
+        color: #9b59b6;
+        transform: scale(0.5);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div>houdunren</div>
+  <script>
+    let arr1 = [1, 2, 3, 1, 1, 5, 4, 1, 6, 4];
+
+    // 数组求和
+    function arraySum(array) {
+      return array.reduce(function (total, cur) {
+        return total + cur;
+      });
+    }
+    console.log(arraySum(arr1)); // 28
+
+    // 使用eval进行数组求和
+    console.log(eval(arr1.join("+"))); // 28
+
+
+    // 统计某个元素在数组中出现的个数，使用reduce方法
+    function arrayCount(array, item) {
+      return array.reduce(function (total, cur) {
+        total += (cur == item ? 1 : 0);
+        return total;
+      }, 0);
+    }
+    console.log(arrayCount(arr1, 1)); // 4
+    console.log(arrayCount(arr1, 4)); // 2
+
+    // 返回数组的最大值
+    function arrayMax(array) {
+      return array.reduce(function (pre, cur) {
+        return pre > cur ? pre : cur;
+      });
+    }
+    console.log(arrayMax(arr1)); // 6
+    // 用Math提供的方法
+    console.log(Math.max(...arr1));
+
+
+    let carts = [
+      { name: "iphone", price: 12000 },
+      { name: "imac", price: 25000 },
+      { name: "ipad", price: 3600 }
+    ];
+    // 获取价格最高的商品
+    function maxPrice(array) {
+      return array.reduce(
+        (goods, elem) => (goods.price > elem.price ? goods : elem)
+      );
+    }
+    console.log(maxPrice(carts)); // {name: "imac", price: 25000}
+    //商品价格汇总
+    function priceSum(goods) {
+      return goods.reduce(function (total, cur) {
+        return total + cur.price;
+      }, 0);
+    }
+    console.log(priceSum(carts)); // 40600
+
+    // 获取价格超过1万元的商品名称
+    function getNameByPrice(goods, price) {
+      return goods.reduce(function (arr, cur) {
+        if (cur.price > price) arr.push(cur);
+        return arr;
+      }, []).map(function (item) {
+        return item.name;
+      });
+      // 使用 filter实现
+      // return goods.filter(function(good){
+      //   return good.price > price;
+      // }).map(item => item.name);
+    }
+    console.log(getNameByPrice(carts, 10000));
+    // 使用filter实现
+
+
+    arr1 = [1, 2, 3, 1, 1, 5, 4, 1, 6, 4]
+    //数组去重
+    let arr2 = arr1.reduce(function (arr, cur) {
+      if (arr.includes(cur) === false) {
+        arr.push(cur);
+      }
+      return arr;
+    }, []);
+    console.log(arr2); // [1, 2, 3, 5, 4, 6]
+
+    carts = [
+      { name: "iphone", price: 12000 },
+      { name: "imac", price: 25000 },
+      { name: "imac", price: 25000 },
+      { name: "ipad", price: 3600 },
+      { name: "ipad", price: 3600 }
+    ];
+    // 商品去重
+    function filterGoods(goods) {
+      return goods.reduce(function (arr, cur) {
+        let find = arr.find(function (v) {
+          return v.name == cur.name;
+        });
+        if (!find) arr.push(cur);
+        return arr;
+      }, []);
+    }
+    console.table(filterGoods(carts));
+
+
+
+    const div = document.querySelector("div");
+    // console.log([...div.textContent]); //可以将字符串直接展开为数组
+    [...div.textContent].reduce(function(pre, cur, index){
+      pre == index && (div.innerHTML = ""); //先清空
+      let span = document.createElement("span");
+      span.innerHTML = cur;
+      div.appendChild(span);
+      // 添加一个鼠标监听事件
+      span.addEventListener("mouseover",function(){
+        this.classList.add("changeColor");
+      });
+      span.addEventListener("animationend", function(){
+        this.classList.remove("changeColor");
+      })
+    }, 0);
+  </script>
+</body>
+
+</html>

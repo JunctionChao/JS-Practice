@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>this在闭包中的历史遗留问题</title>
+</head>
+<body>
+  <script>
+    // this指向
+    // this 总是指向调用该函数的对象，即函数在搜索this时只会搜索到当前活动对象。
+    // 下面是函数因为是在全局环境下调用的，所以this指向window，
+    let hd1 = {
+      user: "hdr",
+      get: function() {
+        return function() {
+          return this.user;
+        };
+      }
+    };
+    let h1 = hd1.get();
+    console.log(h1()); // undefined  这里调用时是在对象方法中的函数中this指向全局的window
+    // 如果我们以闭包的思路来考虑，this会去找该函数父级作用域的this，父级作用域的this指向当前对象，
+    // 但是this比较特殊,this指向调用当前函数的对象，而调用当前函数的是window
+
+
+    // 可以使用普通变量来保存当前对象
+    let hd2 = {
+      user: "hdr",
+      get: function() {
+        let This = this;
+        return function() {
+          return This.user;
+        };
+      }
+    };
+    let h2 = hd2.get();
+    console.log(h2()); // hdr
+
+
+    // 当然使用箭头函数是最新合适的方法
+    let hd3 = {
+      user: "hdr",
+      get: function() {
+        return () => {
+          return this.user;
+        };
+      }
+    };
+    let h3 = hd3.get();
+    console.log(h3()); // hdr
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原型关系详解</title>
+</head>
+
+<body>
+  <script>
+    let obj = new Object();
+    obj.name = "张三";
+    console.dir(Object);
+
+    Object.prototype.show = function () {
+      console.log("houdunren.com");
+    };
+
+    function User() {}
+    console.dir(User);
+    // 可以在控制台观察到 User.prototype和User.__proto__ 的原型都有show属性
+    console.log(User.prototype.__proto__ == Object.prototype); // true
+    console.log(User.__proto__.__proto__ == Object.prototype); // true
+    console.dir(Object.prototype);
+    console.log(Object.prototype.__proto__); // null
+    console.dir(Object.__proto__.__proto__);
+    console.log(Object.__proto__.__proto__ == Object.prototype); // true
+
+    // 下面我们通过User直接访问show和通过创建新对象访问show都能访问，他们都会向上找到Object.prototype中的show属性
+    User.show();
+    u = new User(); // houdunren.com
+    u.show(); // houdunren.com
+  </script>
+</body>
+
+</html>

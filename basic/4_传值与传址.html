@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>传值与传址</title>
+</head>
+
+<body>
+  <script>
+    // 基本数据类型指数值、字符串等简单数据类型，引用类型指对象数据类型。
+    // 基本类型复制是值的复制，互相不受影响
+    // 对于引用类型来讲，变量保存的是引用对象的指针。变量间赋值时其实赋值是变量的指针，这样多个变量就引用的是同一个对象
+    let a = 100;
+    let b = a;
+    a = 200;
+    console.log(b); // 100
+
+    let oa = {
+      web: "后盾人"
+    };
+    let ob = oa;
+    oa.web = "hdcms";
+    console.log(ob); // {web:"hdcms"}
+
+
+    // 对声明但未赋值的变量返回类型为 undefined 表示值未定义
+    let hd;
+    console.log(typeof hd); // undefined
+
+    // null 用于定义一个空对象，即如果变量要用来保存引用类型，可以在初始化时将其设置为null
+    var hn = null;
+    console.log(typeof hn); // object
+
+    // 解构模式赋值
+    let [a1, b1] = [1, 2]
+    console.log(a1, b1); // 1, 2
+    let { name, url } = { name: '后盾人', url: 'houdunren.com' };
+    console.log(name, url); // 后盾人, houdunren.com
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Symbol</title>
+</head>
+
+<body>
+  <script>
+    // Symbol用于防止属性名冲突而产生的，比如向第三方对象中添加属性时。
+    // Symbol 的值是唯一的，独一无二的不会重复的
+    // 可以吧Symbol理解为特殊的字符串
+    let hd = Symbol();
+    let edu = Symbol();
+    console.log(hd); // Symbol()
+    console.log(hd == edu); // false
+
+    // Symbol 不可以添加属性
+    hd.name = "后盾人";
+    console.log(hd.name); // undefined
+
+    // 传入字符串用于描述Symbol，方便在控制台分辨Symbol
+    hd = Symbol("is name");
+    edu = Symbol("这是一个测试");
+
+    console.log(hd); // Symbol(is name)
+    console.log(edu.toString()); // Symbol(这是一个测试)
+    console.log(edu.description); // 这是一个测试
+
+    // 传入相同参数Symbol也是独立唯一的，因为参数只是描述而已，但使用 Symbol.for则不会
+    hd = Symbol("后盾人");
+    edu = Symbol("后盾人");
+    console.log(hd == edu); //false
+
+
+    // Symbol.for 根据描述获取系统中已存在的Symbol，如果不存在则新建一个Symbol
+    // 使用Symbol.for会在系统中将Symbol登记, 使用Symbol则不会登记
+    let cms1 = Symbol.for("hdcms");
+    let cms2 = Symbol.for("hdcms");
+    console.log(cms1 == cms2); // true
+    console.log(cms1); // Symbol(hdcms)
+
+    // Symbol.keyFor 根据使用Symbol.for登记的Symbol返回描述，如果找不到返回undefined 
+    let cms3 = Symbol.keyFor(cms1); // 返回的是描述
+    console.log(cms3); // hdcms
+
+
+    /* Symbol 是独一无二的所以可以保证对象属性的唯一。
+       Symbol 声明和访问使用 []（变量）形式操作
+       也不能使用 . 语法因为 .语法是操作字符串属性的
+    */
+    let symbol = Symbol("后盾人");
+    let obj = {
+      symbol: "hdcms.com"
+    };
+    console.log(obj); // {symbol: "hdcms.com"}  这里symbol只是普通的字符串
+
+    obj = {
+      [symbol]: "houdunren.com"
+    };
+    console.log(obj); // {Symbol(后盾人): "houdunren.com"}
+    console.log(obj[symbol]); //houdunren.com
+
+    let user1 = {
+      name: "张三",
+      key: Symbol()
+    };
+    let user2 = {
+      name: "张三",
+      key: Symbol()
+    }
+    let grade = {
+      [user1.key]: { js: 100, css: 86 },
+      [user2.key]: { js: 90, css: 88 }
+    };
+    console.log(grade[user1.key]); // { js: 100, css: 86 }
+    console.log(grade[user2.key]); // { js: 90, css: 88 }
+
+
+    // 实际用处
+    // 缓存操作：使用Symbol可以解决在保存数据时由于名称相同造成的耦合覆盖问题。
+    class Cache {
+      static data = {};
+      static set(name, value) {
+        this.data[name] = value;
+      }
+      static get(name) {
+        return this.data[name];
+      }
+    }
+
+    let user = {
+      name: "后盾人",
+      key: Symbol("用户")
+    };
+
+    let cart = {
+      name: "购物车",
+      key: Symbol("购物车")
+    };
+
+    Cache.set(user.key, user);
+    Cache.set(cart.key, cart);
+    console.log(Cache.get(user.key)); // {name: "后盾人", key: Symbol(用户)}
+    console.log(Cache.get(cart.key)); // {name: "购物车", key: Symbol(购物车)}
+
+
+    // Symbol 不能使用 for/in、for/of 遍历操作
+    symbol = Symbol("后盾人");
+    obj = {
+      name: "hdcms.com",
+      [symbol]: "houdunren.com"
+    };
+
+    for (const key in obj) {
+      console.log(key); //name
+    }
+
+    for (const key of Object.keys(obj)) {
+      console.log(key); //name
+    }
+
+    // 可以使用 Object.getOwnPropertySymbols 获取所有Symbol属性
+    for (const key of Object.getOwnPropertySymbols(obj)) {
+      console.log(key); // Symbol(后盾人)
+    }
+
+    // 也可以使用 Reflect.ownKeys(obj) 获取所有属性包括Symbol
+    for (const key of Reflect.ownKeys(obj)) {
+      console.log(key); // name  Symbol(后盾人)
+    }
+
+
+    // 如果对象属性不想被遍历，可以使用Symbol保护
+    const site = Symbol("网站名称");
+    class User {
+      constructor(name) {
+        this[site] = "houdunren";
+        this.name = name;
+      }
+      getName() {
+        return `${this[site]}-${this.name}`;
+      }
+    }
+    const u = new User("李四");
+    console.log(u.getName()); // houdunren-李四
+    for (const key in u) {
+      console.log(key); // name
+    }
+  </script>
+</body>
+
+</html>

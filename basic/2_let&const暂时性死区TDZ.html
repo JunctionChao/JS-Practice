@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>let&const</title>
+</head>
+<body>
+  <script>
+    // 使用let/const必须声明后才能使用，更符合使用习惯
+    let web = 'houdunren.com';
+    console.log(web);
+
+
+    let hc = "hc";
+    function run1() {
+      console.log(hc); // 在函数作用域内未声明变量, 回去再外部寻找变量名 hc
+    }
+    run1();
+
+
+    let hd = "hd";
+    function run2() {
+      // 在函数作用域中产生TDZ，不允许变量在未声明前使用
+      console.log(hd); // Uncaught ReferenceError: Cannot access 'hd' before initialization
+      let hd = "hd";
+    }
+    run2();
+
+  </script>
+</body>
+</html>

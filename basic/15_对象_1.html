@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>对象</title>
+</head>
+
+<body>
+  <script>
+    // 对象是包括属性与方法的数据类型，JS中大部分类型都是对象如 String/Number/Math/RegExp/Date 等
+    let user = {
+      name: "houdunren",
+      grade: [
+        { lesson: "js", score: 99 },
+        { lesson: "mysql", score: 85 }
+      ],
+      // 定义在对象中的函数称为方法
+      average() {
+        const total = this.grade.reduce((t, a) => t + a.score, 0);
+        return this.name + "平均成绩 :" + total / this.grade.length + "分";
+      }
+    };
+    console.log(user.average());
+
+    // 字面量的方式创建对象
+    let u = {
+      name: '张三',
+      get: function () {
+        return this.name;
+      }
+    }
+    console.log(u.get());
+    console.log(u.name);
+    console.log(u["name"]);
+    for (const key in u) {
+      console.log(u[key]);
+    }
+    // 也可以动态添加属性
+    u.age = 18;
+    // 删除属性
+    delete u.age;
+
+    // 对象和函数、数组一样是引用类型，即将引用地址传给变量
+    let u1 = {};
+    let u2 = u1;
+    u1.age = 18;
+    console.log(u2.age); // 18
+    // 对象做为函数参数使用时也不会产生完全复制，内外共用一个对象
+    let u3 = { age: 22 };
+    function hd(user) {
+      user.age += 10;
+    }
+    hd(u3);
+    console.log(u3.age); //32
+
+    // 对象也有展开语法
+    let u4 = { name: "张三", age: 22 };
+    let u5 = { ...u4, lang: "zh" };
+    console.log(u5); // {name: "张三", age: 22, lang: "zh"}
+
+    // 可以通过展开语法进行函数参数合并
+    function upload(params) {
+      let config = {
+        type: "*.jpeg,*.png",
+        size: 10000
+      };
+      params = { ...config, ...params };
+      console.log(params);
+    }
+    upload({ size: 999 });
+
+
+    // 解构赋值
+    // 解构是一种更简洁的赋值特性，可以理解为分解一个数据的结构
+    let info = { name: '张三', url: 'houdunren.com' };
+    let { name: n, url: ul } = info
+    console.log(n); // 张三
+
+    //如果属性名与变量相同可以省略属性定义
+    let { name, url } = { name: '张三', url: 'houdunren.com' };
+    console.log(name); // 张三
+
+    // 函数返回值直接解构到变量
+    // function hd() {
+    //   return {
+    //     name: '张三',
+    //     url: 'houdunren.com'
+    //   };
+    // }
+    // let { name: n, url: u } = hd();
+    // console.log(n);
+
+    // 传参方式
+    function hd({ name, age }) {
+      console.log(name, age); //张三 18
+    }
+    hd({ name: "张三", age: 18 });
+
+    // 系统函数解构练习
+    let { random } = Math; // Math对象中的属性random，可以只获取部分数据
+    console.log(random());
+
+    // 只赋值部分变量
+    // let [, url1] = ['后盾人', 'houdunren.com'];
+    // console.log(url1);// houdunren.com
+
+    // let { name } = { name: '后盾人', url: 'houdunren.com' };
+    // console.log(name); // 后盾人
+
+
+    // 可以直接使用变量赋值对象属性
+    name = "后盾人", url = "houdunren.com";
+    //标准写法如下
+    hd = { name: name, url: url };
+    console.log(hd);  // {name: "后盾人", url: "houdunren.com"}
+
+    //如果属性和值变量同名可以写成以下简写形式
+    let opt = { name, url };
+    console.log(opt); // {name: "后盾人", url: "houdunren.com"}
+    // 嵌套解构
+    hd = {
+      name: 'houdunren',
+      lessons: {
+        title: 'JS'
+      }
+    }
+    const { lessons: { title } } = hd;
+    console.log(title); // JS
+
+    // 解构设置默认值
+    [name, site = 'hdcms'] = ['后盾人'];
+    console.log(site); // hdcms
+
+    let { name1, url1, user1 = 'hdr' } = { name1: '后盾人', url1: 'houdunren.com' };
+    console.log(name1, user1); // 后盾人  hdr
+
+    // 使用默认值特性可以方便的对参数预设
+    function createElement(options) {
+      let {
+        width = '200px',
+        height = '100px',
+        backgroundColor = 'red'
+      } = options;
+
+      const h2 = document.createElement('h2');
+      h2.style.width = width;
+      h2.style.height = height;
+      h2.style.backgroundColor = backgroundColor;
+      document.body.appendChild(h2);
+    }
+    createElement({
+      backgroundColor: 'green'
+    });
+
+    // 函数参数
+    // 数组参数的使用
+    function hd2([a, b]) {
+      console.log(a, b);
+    }
+    hd2(['后盾人', 'hdcms']);
+
+    // 对象参数使用方法
+    function hd3({ name, url, user = 'hdr' }) {
+      console.log(name, url, user);
+    }
+    hd3({ name: '后盾人', 'url': 'houdunren.com' }); // 后盾人 houdunren.com hdr
+    // 对象解构传参
+    function user2(name, { sex, age } = {}) {
+      console.log(name, sex, age);
+    }
+    user2("hdr", { sex: "男", age: 18 }); // hdr 男 18
+
+    // 属性管理
+    let obj = { name: "hdr" };
+    obj.site = "houdunren.com"; // 添加属性
+    delete obj.site; // 删除属性
+    console.log(obj.hasOwnProperty("name")); // 检测属性
+
+    // hasOwnProperty检测对象自身是否包含指定的属性，不检测原型链上继承的属性
+    let arr = ["后盾人"];
+    console.log(arr);
+    console.log(arr.hasOwnProperty("length")); // true
+    console.log(arr.hasOwnProperty("concat")); // false  concat属性在arr的原型链上 __proto__
+    console.log("concat" in arr); // true  in方式检测对象本身属性和原型链上继承的属性
+
+    let hd4 = {
+      web: "houdunren.com"
+    };
+    //设置hd4为obj的新原型, 可以理解为obj继承hd4
+    Object.setPrototypeOf(obj, hd4);
+    console.log(obj);
+    console.log("web" in obj); // true
+    console.log(obj.hasOwnProperty("web")); // false
+
+    // 使用 Object.getOwnPropertyNames 可以获取对象的属性名集合
+    let hd5 = { name: '后盾人', year: 2010 }
+    const names = Object.getOwnPropertyNames(hd5)
+    console.log(names) // ["name", "year"]
+
+    // 计算属性
+    // 对象属性可以通过表达式计算定义，这在动态设置属性或执行属性方法时很好用。
+    let id = 0;
+    let user6 = {
+      [`id-${id++}`]: id,
+      [`id-${id++}`]: id,
+      [`id-${id++}`]: id
+    };
+    console.log(user6);
+
+    // 使用计算属性为文章定义键名
+    const lessons = [
+      {
+        title: "媒体查询响应式布局",
+        category: "css"
+      },
+      {
+        title: "FLEX 弹性盒模型",
+        category: "css"
+      },
+      {
+        title: "MYSQL多表查询随意操作",
+        category: "mysql"
+      }
+    ];
+    let lessonObj = lessons.reduce((obj, cur, index) => {
+      obj[`${cur["category"]}-${index}`] = cur;
+      return obj;
+    }, {});
+    console.log(lessonObj); //{css-0: {…}, css-1: {…}, mysql-2: {…}}
+    // 使用JSON格式打印
+    console.log(JSON.stringify(lessonObj, null, 2));
+
+    // assign 从一个或多个对象复制属性
+    let hd6 = { a: 1, b: 2 };
+    hd6 = Object.assign(hd6, { f: 1 }, { m: 9 }); //后者中有重复属性会覆盖之前的属性
+    console.log(hd6); // {a: 1, b: 2, f: 1, m: 9}
+
+
+    // 遍历对象
+    // 使用系统提供的API可以方便获取对象属性与值
+    const hd7 = {
+      name: "后盾人",
+      age: 10
+    };
+    console.log(Object.keys(hd7)); //["name", "age"]
+    console.log(Object.values(hd7)); //["后盾人", 10]
+    console.log(Object.entries(hd7)); //[["name","后盾人"],["age",10]]
+
+    // 使用for/in遍历对象属性
+    for (let key in hd7) {
+      console.log(key, hd7[key]);
+    }
+    // for/of用于遍历迭代对象，不能直接操作对象。但Object对象的keys等方法返回的是迭代对象。
+    for (const key of Object.keys(hd7)) {
+      console.log(key);
+    }
+    for (const value of Object.values(hd7)) {
+      console.log(value);
+    }
+    // 同时获取属性名与值
+    for (const array of Object.entries(hd7)) {
+      console.log(array);
+    }
+    // 使用扩展语法同时获取属性名与值
+    for (const [key, value] of Object.entries(hd7)) {
+      console.log(key, value);
+    }
+
+    // 浅拷贝与深拷贝
+    // 对象赋值时复制的内存地址，所以一个对象的改变直接影响另一个
+    let hd8 = {name: "hdr"};
+    let cms = hd8;
+    console.log(hd8); // {name: "hdr"}
+    cms.name = "houdunren";
+    console.log(hd8); // {name: "houdunren"}
+
+    // 重新创建对象进行属性定义
+    hd8 = {name: "hdr"};
+    let cms2 = {name: hd8.name};
+    console.log(cms2); // {name: "hdr"}
+    cms2.name = "sina";
+    console.log(hd8); // {name: "hdr"}   不会改变原来的对象
+
+    // 浅拷贝多种方式
+    // 使用for/in执行对象拷贝
+    let hd8_new = {};
+    for (const key in hd8) {
+      hd8_new[key] = hd8[key];
+    }
+    hd8_new.name = "new_name";
+    console.log(hd8); // {name: "hdr"}
+    
+    // Object.assign 函数可简单的实现浅拷贝，它是将两个对象的属性叠加,后面对象属性会覆盖前面对象同名属性
+    let hd8_new2 = Object.assign({}, hd8);
+    hd8_new2.name = "new2_name";
+    console.log(hd8); // {name: "hdr"}
+
+    // 使用展开语法也可以实现浅拷贝
+    let hd8_new3 = {...hd8};
+    hd8_new3.name = "new3_name";
+    console.log(hd8); // {name: "hdr"}
+
+
+    // 深拷贝
+    // 当对象中某个属性的值也是引用类型时，使用上述方法会使其中引用类型还是共用一个地址，需要使用深拷贝
+    let obj8 = {
+      name: "后盾人",
+      user: {
+        name: "hdcms"
+      },
+      data: []
+    };
+
+    function deepcopy(object) {
+      let obj = object instanceof Array ? [] : {};
+      for (const [k, v] of Object.entries(object)) {
+        obj[k] = typeof v == "object" ? deepcopy(v) : v;
+      }
+      return obj;
+    }
+
+    dc_obj = deepcopy(obj8);
+    dc_obj.data.push(1);
+    console.log(JSON.stringify(dc_obj, null, 2));
+    console.log(JSON.stringify(obj8, null, 2)); // 不修改之前的对象
+  </script>
+</body>
+
+</html>

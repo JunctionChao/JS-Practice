@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map</title>
+</head>
+
+<body>
+  <div desc="后盾人">houdunren</div>
+  <div desc="开源系统">hdcms</div>
+  <script>
+    // 以往对象只把字符串作为键名
+    /*
+    Map是一组键值对的结构，用于解决以往不能用对象做为键的问题
+    具有极快的查找速度
+    函数、对象、基本类型都可以作为键或值
+    对于键是对象的Map， 键保存的是内存地址，值相同但内存地址不同的视为两个键。
+    */
+
+    // 声明定义
+    // 接受一个数组作为参数，该数组的成员是一个表示键值对的数组
+    let map = new Map([
+      ["name", "张三"],
+      [function () { }, "hdcms"],
+      [{}, "houdunren"],
+      [1, "baidu.com"]
+    ]);
+    console.log(map); // Map(4) {"name" => "张三", ƒ => "hdcms", {…} => "houdunren", 1 => "baidu.com"}
+    console.log(map.get("name")); // 张三
+
+    // 使用set 方法添加元素，支持链式操作
+    map = new Map();
+    map.set("name", "张三").set(function () { }, "hdcms").set({}, "houdunren").set(1, "baidu.com");
+    console.log(map); // Map(4) {"name" => "张三", ƒ => "hdcms", {…} => "houdunren", 1 => "baidu.com"}
+
+    // map数据数量
+    console.log(map.size); // 4
+    // 元素是否存在
+    console.log(map.has("name")); // true
+    console.log(map.has(1)); // true
+
+    // 删除元素
+    map.delete("name");
+    console.log(map.has("name")); // false
+
+    // 清空元素
+    map.clear();
+    console.log(map.size); // 0
+
+    // 遍历map
+    // 使用 keys()/values()/entries() 都可以返回可遍历的迭代对象。
+    map = new Map([
+      ["name", "张三"],
+      [{}, "houdunren"],
+      [1, "baidu.com"]
+    ]);
+    console.log(map.keys()); // MapIterator {"name", {…}, 1}
+    console.log(map.values()); // MapIterator {"张三", "houdunren", "baidu.com"}
+    console.log(map.entries()); // MapIterator {"name" => "张三", {…} => "houdunren", 1 => "baidu.com"}
+    // for/of
+    for (const [key, value] of map) {
+      console.log(`${key}=>${value}`);
+    }
+    // forEach
+    map.forEach(function (item, key) {
+      console.log(item, key);
+    });
+    /*
+    张三 name
+    houdunren {}
+    baidu.com 1
+    */
+
+    // 数组转换
+    // 可以使用展开语法 或 Array.form 静态方法将Map类型转为数组，这样就可以使用数组处理函数了
+    let hd = new Map([["houdunren", "后盾人"], ["hdcms", "开源系统"]]);
+    console.log(...hd); // (2) ["houdunren", "后盾人"] (2) ["hdcms", "开源系统"]
+    console.log(...hd.entries()); // (2) ["houdunren", "后盾人"] (2) ["hdcms", "开源系统"]
+    console.log(...hd.values()); // 后盾人 开源系统
+    console.log(...hd.keys()); // houdunren hdcms
+    console.log([...hd.keys()]); // [houdunren, hdcms]
+
+    // Map管理DOM节点
+    map = new Map();
+    document.querySelectorAll("div").forEach(item => {
+      map.set(
+        item,
+        {
+          content: item.getAttribute("desc")
+        }
+      );
+    });
+    // console.log(map);
+    map.forEach(function(value, elem){
+      elem.addEventListener("click", function(){
+        alert(value.content);
+      })
+    });
+  </script>
+</body>
+
+</html>

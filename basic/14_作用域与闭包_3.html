@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>闭包带来的内存泄漏问题</title>
+</head>
+
+<body>
+  <div desc="houdunren">在线学习</div>
+  <div desc="hdcms">开源产品</div>
+
+  <script>
+    let divs = document.querySelectorAll("div");
+    divs.forEach(function (item) {
+      item.addEventListener("click", 
+      // 在这个时间处理函数中,根据闭包特性，我们是能访问到父级作用域的item,
+      // 因此当item很多时，而我们只需要item的某个属性值，但内存会将所有的item都保存，造成不必要的内存浪费
+      function () {
+        console.log(item.getAttribute("desc"));
+        console.log(item);
+      });
+    });
+
+
+    // 通过清除不需要的数据解决内存泄漏问题
+    divs.forEach(function(item) {
+      let desc = item.getAttribute("desc");
+      item.addEventListener("click", function() {
+        console.log(desc);
+      });
+      item = null; // 添加玩监听事件后将对象设为null释放内存
+    });
+  </script>
+</body>
+
+</html>

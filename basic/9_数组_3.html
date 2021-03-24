@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>迭代器操作数组以及扩展方法</title>
+</head>
+
+<body>
+  <input type="text" , name="title">
+  <span></span>
+  <script>
+    // 使用迭代器操作数组
+    let arr1 = ["hdcms", "houdunren"];
+    let keys = arr1.keys(); // keys获取的是数组索引
+    console.log(keys); // 返回的是一个迭代器  Array Iterator {}
+    console.log(keys.next()); // {value: 0, done: false}  迭代方式获取数据
+    console.log(keys.next()); // {value: 1, done: false}  value的值时索引，done表示是否迭代完成
+    console.log(keys.next()); // {value: undefined, done: true}  取不到数据表示迭代完成
+    let values = arr1.values(); // values获取的是数组的值
+    let { value, done } = values.next() // 通过展开语法获取数据
+    console.log(value, done); // hdcms false
+
+    // forof内部其实就是操作迭代对象, 只获取value的值，不会迭代done的值
+    for (const v of arr1.values()) {
+      console.log(v); // hdmcs, houdunren
+    }
+
+    // entries方法, 将索引和值组合在一起进行迭代
+    let en = arr1.entries();
+    console.log(en); // 返回的也是迭代器  Array Iterator {}
+    console.log(en.next()); // {value: Array(2), done: false}  这里Array(2): [0, "hdcms"]
+    console.log(en.next()); // {value: Array(2), done: false}                [1, "houdunren"]
+    console.log(en.next()); // {value: undefined, done: false}
+
+    en = arr1.entries();
+    // 解构赋值
+    let { isdone, value: [index, v] } = en.next();
+    console.log(index, v); // 0, "hdcms"
+    // 使用forof 操作
+    for (const [key, value] of arr1.entries()) {
+      console.log(key, value);  // 0 "hdcms",  1 "houdunren"
+    }
+
+
+    // 扩展方法
+    // every  用于迭代的检测元素，要所有元素操作都要返回真结果才为真
+    // some   迭代的检测元素，如果有一个返回true，表达式结果就是真。
+    // 第一个参数为元素，第二个参数为索引，第三个参数为原数组
+    const user = [
+      { name: "李四", js: 89 },
+      { name: "马六", js: 55 },
+      { name: "张三", js: 78 }
+    ];
+    let result = user.every(function (value, index, arr) {
+      return value.js >= 60;
+    });
+    console.log(result); // false
+    console.log(result ? "全部都及格" : "有未及格的");
+
+    result = user.some(function (value, index, arr) {
+      return value.js < 60;
+    });
+    console.log(result); // true
+    console.log(result ? "有未及格的" : "全部都及格");
+
+    let keywords = ['js', 'php'];
+    let title = document.querySelector("[name='title']");
+    title.addEventListener("keyup", function () {
+      let res = keywords.some((keyword) => {
+        return this.value.indexOf(keyword) != -1;
+      });
+      document.querySelector("span").innerHTML = res
+        ? ""
+        : "必须包含" + keywords.join(",") + "关键字";
+    });
+
+
+    // filter过滤方法
+    let lessons = [
+      { title: '媒体查询响应式布局', category: 'css' },
+      { title: 'FLEX 弹性盒模型', category: 'css' },
+      { title: 'MYSQL多表查询随意操作', category: 'mysql' }
+    ];
+
+    let le = lessons.filter(function (item, index, array) {
+      if (item.category.toLowerCase() == 'css') {
+        return true;
+      }
+    });
+
+    console.log(lessons);// filter不改变原数组
+    console.log(le); // 返回为真的元素
+
+    // map  map映射可以在数组的所有元素上应用函数，用于映射出新的值
+    // 也是三个参数，第一个必须，二三可选参数
+    // 根据原数组元素是值类型还是引用类型来判断是否修改原数组
+    console.log(lessons.map(item => item.title)); // ["媒体查询响应式布局", "FLEX 弹性盒模型", "MYSQL多表查询随意操作"]
+
+    let less = lessons.map(function (value) {
+      return Object.assign({ click: 10 }, value); //返回新对象，不修改原数组
+      // return {
+      //   title: value.title,
+      //   category: value.category,
+      //   click: 100
+      // }; // 返回新对象不修改原数组
+    });
+    console.log(less);
+
+    lessons.map(function (value) {
+      value.click = 100; // 直接修改原数组
+    });
+    console.log(lessons);
+
+
+    // reduce 
+    // 使用 reduce 与 reduceRight 函数可以迭代数组的所有元素，reduce 从前开始 reduceRight 从后面开始。
+    // 第一个参数是执行函数，第二个参数为初始值
+    // 执行函数参数：初始值，当前元素，当前元素索引，当前元素所属的数组。 前两个为必须参数
+    let arr2 = [1, 2, 3, 4, 5, 6]
+
+    arr2.reduce(function (total, value, index, arrary) {
+      console.log(total, value); // total为每次函数返回值，初始为数组第一个元素值或者是第二个参数的初始值
+      return total + value;
+    });
+
+    arr2.reduce(function (total, value, index, arrary) {
+      console.warn(total, value);
+      return total + value;
+    }, 10);
+
+  </script>
+</body>
+
+</html>

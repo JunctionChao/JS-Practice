@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Json</title>
+</head>
+<body>
+  <script>
+    // json 是一种轻量级的数据交换格式，易于人阅读和编写。
+    // 使用json 数据格式是替换 xml 的最佳方式，主流语言都很好的支持json 格式。所以 json 也是前后台传输数据的主要格式
+
+    let hd = {
+      "title": "hdcm",
+      "url": "houdunren.com",
+      "teacher": {
+        "name": "hdr",
+      }
+    }
+    console.log(hd.teacher.name); // hdr
+    // 序列化是将 json 转换为字符串，一般用来向其他语言传输使用。
+    console.log(JSON.stringify(hd)); // {"title":"hdcm","url":"houdunren.com","teacher":{"name":"hdr"}}
+    // 根据第二个参数指定保存的属性
+    console.log(JSON.stringify(hd, ['title', 'url'])); // {"title":"hdcm","url":"houdunren.com"}
+    // 第三个是参数用来控制缩进数量，如果字符串则为前导字符
+    console.log(JSON.stringify(hd, null, 4));
+    console.log(JSON.stringify(hd, null, " -"));
+
+    // 使用 JSON.parse 将字符串 json 解析成对象
+    let jsonStr = JSON.stringify(hd);
+    hd2 = JSON.parse(jsonStr);
+    console.log(hd2.title); // hdcm
+
+    // 使用第二个参数函数来对返回的数据二次处理
+    hd3 = JSON.parse(jsonStr, (key, value) => {
+      if (key == "title") {
+        return `[推荐]-${value}`;
+      }
+      return value;
+    })
+    console.log(hd3.title); // [推荐]-hdcm
+  </script>
+</body>
+</html>

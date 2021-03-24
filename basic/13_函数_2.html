@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>函数</title>
+</head>
+
+<body>
+  <button>hdcms</button>
+  <script>
+    // this
+    // 调用函数时 this 会隐式传递给函数指函数调用时的关联对象，也称之为函数的上下文
+    // 全局的函数称为函数，类中的函数称为方法
+
+    // 全局环境下this就是window对象的引用
+    console.log(this == window);
+
+    // 使用严格模式时在全局函数内this为undefined
+    var hd = 'hdr';
+    function get() {
+      "use strict"
+      return this.hd;
+    }
+    // console.log(get()); // 严格模式将产生错误 Cannot read property 'hd' of undefined
+
+    // 方法调用
+    // 函数为对象的方法时this 指向该对象
+    function User1(name) {
+      this.name = name;
+      this.say = function () {
+        console.log(this); // User1 {name: "后盾人", say: ƒ}
+        function render() { // 这是在方法内部中的函数
+          console.log(this); // 这里的this指的是全局的window对象
+        }
+        render();
+        return this.name;
+      }
+    }
+    let u1 = new User1("hdr1");
+    console.log(u1.say()); // hdr1
+
+    class User2 {
+      constructor(name) {
+        this.name = name
+      }
+      say() {
+        console.log(this); // User2 {name: "hdr"}
+        return this.name;
+      }
+    }
+    let u2 = new User2("hdr2");
+    console.log(u2.say()); // hdr2
+
+    // 让对象方法中的函数中的this指向当前对象的几种方法
+    let lesson = {
+      site: "后盾人",
+      lists: ["js", "css", "mysql"],
+
+      // show() {
+      //   const self = this; // 通过将当前对象保存来实现
+      //   return this.lists.map(function(title){
+      //     return `${self.site}-${title}`;
+      //   });
+      // }
+
+      // show() {
+      //   return this.lists.map(function (title) {
+      //     return `${this.site}-${title}`;
+      //   }, this); // 将this传递给map函数的第二个参数
+      // }
+
+      // 箭头函数实现 推荐使用, 
+      // 箭头函数中this指向上下文，父级作用域当中的this,在这里就指向当前对象
+      show() {
+        return this.lists.map(title => `${this.site}-${title}`);
+      }
+    };
+    console.log(lesson.show()); // ["后盾人-js", "后盾人-css", "后盾人-mysql"]
+    // 这里由于原数组中的元素是值类型，不改变原数组
+    console.log(lesson.lists); // ["js", "css", "mysql"]
+
+    let Dom = {
+      site: "后盾人",
+      bind() {
+        const button = document.querySelector("button");
+        button.addEventListener("click", event => {
+          alert(this.site + event.target.innerHTML); // 这里是箭头函数，this指当前对象，event.target指button对象
+        });
+
+        // 另一种写法
+        // const button = document.querySelector("button");
+        // const self = this;
+        // button.addEventListener("click", function() {
+        //   alert(self.site + this.innerHTML); // 这里用self保存当前对象，这里this指向button对象
+        // });
+
+        // click回调函数的另一种写法
+        // button.onclick = function(){
+        //   console.log(this); // 这里this指向button对象，这里理解为button的onclick属性为一个方法
+        // }
+
+      }
+    };
+    Dom.bind();
+
+    // 使用handleEvent绑定事件处理器时，this指向当前对象而不是DOM元素
+    // Dom = {
+    //   site: "后盾人",
+    //   handleEvent: function(event) {
+    //     console.log(this); // 这里this指向当前对象
+    //     console.log(event.target); // 这里指向button对象
+    //   },
+    //   bind() {
+    //     const button = document.querySelector("button");
+    //     button.addEventListener("click", this);
+    //   }
+    // };
+    // Dom.bind();
+
+
+    // apply/call/bind
+    // 改变this指针，也可以理解为对象借用方法，就现像生活中向邻居借东西一样的事情
+
+    // 构造函数中的this默认是一个空对象，然后构造函数处理后把这个空对象变得有值
+    function User3(name) {
+      this.name = name;
+    }
+    // 可以改变构造函数中的空对象，即让构造函数this指向到另一个对象。
+    let hdcms = { url: "hdcms.com" };
+    User3.call(hdcms, "HDCMS"); // 将hadms对象 传递给User3的this,改变了this的指针，然后立刻执行User3构造函数，即添加了name属性
+    console.log(hdcms.name); //HDCMS
+    console.log(hdcms); // {url: "hdcms.com", name: "HDCMS"}
+
+    // call与apply 用于显示的设置函数的上下文，两个方法作用一样都是将对象绑定到this，只是在传递参数上有所不同。
+    // apply 用数组传参
+    // call 需要分别传参
+    // 与 bind 不同 call/apply 会立即执行函数
+    function User4(web, url) {
+      console.log(web + url + this.name);
+    }
+    let zs = { name: "张三" };
+    User4.call(zs, "后盾人", "houdunren.com"); // 后盾人houdunren.com张三
+    User4.apply(zs, ["后盾人", "houdunren.com"]); // 后盾人houdunren.com张三
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>函数</title>
+</head>
+
+<body>
+  <button>订阅</button>
+  <script>
+    // JS中函数也是对象函数是Function类的创建的实例，下面的例子可以方便理解函数是对象
+    let f = new Function("title", "console.log(title)");
+    f("houdunren"); // houdunren
+    // 使用函数声明来定义函数
+    function hd(title) {
+      console.log(title);
+    }
+
+    let cms = function (title) {
+      console.log(title);
+    };
+    cms("houdunren"); // houdunren
+
+    // 对象字面量属性函数简写
+    let user = {
+      name: null,
+      getName: function (name) {
+        return this.name;
+      },
+      //简写形式
+      setName(value) {
+        this.name = value;
+      }
+    }
+    user.setName('houdunren');
+    console.log(user.getName()); // houdunren
+
+    // 全局函数会声明在window对象中，有可能会覆盖window中的同名属性
+    // 建议使用后面章节的模块处理
+    window.hd("houdunren"); // houdunren
+    // 使用let/const声明的函数不会压入window对象中
+    // window.cms("houdunren") // TypeError: window.cms is not a function
+
+    // 匿名函数
+    let f1 = function (title) {
+      console.log(title);
+    }
+    console.log(f1 instanceof Object); // true
+
+    // 具名函数解析器会进行函数提升， 而匿名函数不会提升
+    // 标准声明优先级高于赋值声明， 标准声明函数会覆盖重名的匿名赋值函数
+    f2("f2 function"); // f2 function
+    function f2(title) {
+      console.log(title);
+    }
+
+    // 立即执行函数指函数定义时立即执行
+    (function () {
+      console.log("立即执行函数");
+    })();
+
+    // 可以用来定义私有作用域防止污染全局作用域
+    (function (window) {
+      function hd() {
+        console.log("js1中的hd函数");
+      }
+      window.js1 = { hd };
+    })(window);
+
+    (function (window) {
+      function hd() {
+        console.log("js2中的hd函数");
+      }
+      window.js2 = { hd };
+    })(window);
+
+    js1.hd(); // js1中的hd函数
+    js2.hd(); // js2中的hd函数
+    // 推荐使用模块化，上述方式是在早期版本中将函数私有化常用的方法
+
+    // 利用块级作用域来实现 let/const有块级作用域
+    {
+      let a = "后盾人";
+    }
+    // console.log(a); // ReferenceError: a is not defined 外部不能访问
+
+    {
+      function hd() {
+        console.log("js3中的hd函数");
+      }
+      window.js3 = { hd };
+    }
+    js3.hd(); // js3中的hd函数
+
+    // 形参是在函数声明时设置的参数，实参指在调用函数时传递的值。
+    // 形参数量大于实参时，没有传参的形参值为 undefined
+    // 实参数量大于形参时，多于的实参将忽略并不会报错
+
+    // 默认参数
+    // 以往默认参数的处理方式
+    function avg(total, year) {
+      year = year || 1;
+      return Math.round(total / year);
+    }
+
+    // 新版本默认参数方式如下
+    function avg(total, year = 1) {
+      return Math.round(total / year);
+    }
+    console.log(avg(2000, 3));
+    // 默认参数要放在最后
+    function sortArray(arr, type = 'asc') {
+      return arr.sort((a, b) => type == 'asc' ? a - b : b - a);
+    }
+    console.log(sortArray([1, 3, 2, 6], 'desc')); // [6, 3, 2, 1]
+
+    // 函数参数
+    function filterFun(item) {
+      return item <= 3;
+    }
+    let arr1 = [1, 2, 3, 4, 5].filter(filterFun);
+    console.log(arr1); // [1, 2, 3]
+    // 匿名函数做参数
+    arr1 = [1, 2, 3, 4, 5].filter(function (a) {
+      return a <= 3;
+    });
+    console.log(arr1); // [1, 2, 3]
+    // 回调函数
+    document.querySelector('button').addEventListener('click', function () {
+      alert(this.innerHTML);
+    });
+
+    // arguments
+    // arguments 是函数获得到所有参数集合
+    function sum1() {
+      console.log(typeof arguments); // object
+      console.log(arguments); // Arguments(5) [2, 3, 4, 2, 6, callee: ƒ, Symbol(Symbol.iterator): ƒ]
+      console.log(arguments.length); // 5
+      return [...arguments].reduce((total, num) => {
+        return (total += num);
+      }, 0);
+    }
+    console.log(sum1(2, 3, 4, 2, 6)); //17
+    // 推荐使用展示语法
+    function sum2(...args) {
+      console.log(args); // [2, 3, 4, 2, 6]
+      console.log(typeof args);
+      return args.reduce((a, b) => a + b);
+    }
+    console.log(sum2(2, 3, 4, 2, 6)); //17
+
+    // 函数简写 箭头函数
+    // 最初
+    let res = [1, 2, 3, 4, 5].filter(function (value, index) {
+      return value <= 3;
+    });
+    // 只有一个参数可以省略括号
+    res = [1, 2, 3, 4, 5].filter(value => {
+      return value <= 3;
+    });
+    // 函数内只有一句 省略掉花括号和return语句，默认会返回
+    res = [1, 2, 3, 4, 5].filter(value => value <= 3);
+    console.log(res); // [1, 2, 3]
+
+    sum = [1, 2, 3, 4, 5].reduce((a, b) => a + b);
+    console.log(sum); // 15
+
+    // 递归函数调用
+    // 主要用于数量不确定的循环操作
+    // 要有退出时机否则会陷入死循环
+    // 阶乘
+    function factorial(num = 3) {
+      return num == 1 ? num : num * factorial(--num);
+    }
+    console.log(factorial(5)); //120
+    function sumof(...num) {
+      return num.length == 0 ? 0 : num.pop() + sumof(...num);
+    }
+    console.log(sumof(1, 2, 3, 4, 5, 7, 9)); //31
+    // 递归打印倒三角
+    function star(row = 5) {
+      if (row == 0) return "";
+      document.write("*".repeat(row) + "<br/>");
+      star(--row);
+    }
+
+    // 回调函数 DOM元素的添加事件函数
+
+    // 展示语法或称点语法体现的就是收/放特性，做为值时是放，做为接收变量时是收
+    function sumdis(discount = 0, ...prices) {
+      let total = prices.reduce((pre, cur) => pre + cur);
+      return total * (1 - discount);
+    }
+    console.log(sumdis(0.1, 100, 300, 299));
+
+    // 标签函数
+    // 使用函数来解析标签字符串，第一个参数是字符串值的数组，其余的参数为标签变量。
+    function hds(str, ...values) {
+      console.log(str); //["站点", "-", "", raw: Array(3)]
+      console.log(values); //["hdr", "houdunren.com"]
+    }
+    let name = 'hdr',url = 'houdunren.com';
+    hds `站点${name}-${url}`;
+  </script>
+</body>
+
+</html>

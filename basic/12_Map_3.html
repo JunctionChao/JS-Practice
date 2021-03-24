@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WeakMap</title>
+</head>
+
+<body>
+  <div>houdunren</div>
+  <div>hdcms</div>
+  <script>
+    /* WeakMap 对象是一组键/值对的集
+
+    键名必须是对象
+    WeaMap对键名是弱引用的，值是正常引用
+    垃圾回收不考虑WeaMap的键名，不会改变引用计数器，键在其他地方不被引用时即删除
+    因为WeakMap 是弱引用，由于其他地方操作成员可能会不存在，所以不可以进行forEach( )遍历等操作
+    也是因为弱引用，WeaMap 结构没有keys( )，values( )，entries( )等方法和 size 属性,基本的增删查方法和Map一样
+    当键的外部引用删除时，希望自动删除数据时使用 WeakMap
+    */
+    const hd = new WeakMap();
+    document.querySelectorAll("div").forEach(item => hd.set(item, item.innerHTML));
+    console.log(hd); //WeakMap {div => "hdcms", div => "houdunren"}
+
+    // 对象引用计数进行内存管理
+    let obj1 = { name: "张三" }; // 对象引用计数器 +1
+    let obj2 = obj1; // 引用计数器 +1
+
+    // WeakMap的键名是弱引用不会改变引用计数器
+    let map = new WeakMap();
+    map.set(obj1, "houdunren"); // 不改变引用计数器
+  </script>
+</body>
+
+</html>

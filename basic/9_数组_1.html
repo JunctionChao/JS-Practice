@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数组</title>
+</head>
+
+<body>
+  <div>hdcms</div>
+  <div>houdunren</div>
+  <style>
+    .hide {
+      display: none;
+    }
+  </style>
+  <script>
+    // 对象方式创建数组
+    const arr1 = new Array(1, '后盾人', 'hdcms')
+    // 字面量方式创建
+    const arr2 = ["hdcms", "houdunren"];
+    console.log(typeof arr1, typeof arr2); // object object
+    // 数组是引用类型可以使用const声明并修改它的值
+    // const 定义的常量是不可以改变的，但是引用类型除外， const本质上是不能修改常量名指向的内存地址
+    arr2.push('houdunwang');
+    console.log(arr2);
+    // 声明多个空元素的数组
+    let arr3 = new Array(3); // 
+    console.log(arr3.length); // 3个空元素
+    console.log(arr3[1]); // undefined
+    // 直接设置3号数组，会将1/2索引的数组定义为空值
+    let arr4 = ["后盾人"];
+    arr4[3] = "hdcms";
+    console.log(arr4.length); //4
+    console.log(arr4[1]); // undefined
+    console.log(arr4);
+    console.table(arr4);
+
+    // 使用Array.of 与 new Array 不同是设置一个参数时不会创建空元素数组
+    let arr5 = Array.of(3);
+    console.log(arr5); // [3]
+
+    arr5 = Array.of(1, 2, 3);
+    console.log(arr5); // [1, 2, 3]
+
+    // 数组转字符串
+    console.log(([1, 2, 3]).toString()); // 1,2,3 默认是逗号连接
+    console.log([1, 2, 3].join("-"));// 1-2-3
+
+    // 字符串转数组
+    let str = "hdcms";
+    console.log(str.split("")); // ["h", "d", "c", "m", "s"]
+    console.log(Array.from(str)); // ["h", "d", "c", "m", "s"]
+
+    // 使用Array.from可将类数组转换为数组，类数组指包含 length 属性或可迭代的对象
+    // 为对象设置length属性后也可以转换为数组，但要下标为数值或数值字符串
+    let user = {
+      0: '后盾人',
+      '1': 18,
+      length: 2
+    };
+    console.log(Array.from(user)); //["后盾人", 18]
+
+    // DOM元素转换为数组后来使用数组函数，第二个参数类似于map 函数的方法，可对数组元素执行函数处理
+    let divs = document.querySelectorAll("div");
+    console.log(divs);
+    console.log(
+      Array.from(divs, function (item) {
+        console.log(item.innerHTML);
+        item.style.backgroundColor = "red";
+        return item;
+      })
+    );
+
+    // 数组展开合并
+    let arr6 = [1, 2, 3], arr7 = [4, 5, 6];
+    console.log([...arr6, ...arr7]); // [1, 2, 3, 4, 5, 6]
+    // 函数参数
+    function func1(...args) {
+      console.log(args); // [1, 2, 3]
+      return args.reduce((s, v) => {
+        return (s += v);
+      }, 0);
+    }
+    console.log(func1(1, 2, 3)); // 6
+    //操作DOM元素
+    // 变成数组使用map方法
+    Array.from(divs).map(function (item) {
+      console.log(item); //
+    });
+    // 使用原型链中的方法
+    Array.prototype.map.call(divs, function (item) {
+      console.log(item);
+    });
+    // 使用...语法转换为数组
+    [...divs].map(function (item) {
+      console.log(item);
+      item.addEventListener("click", function () {
+        this.classList.toggle("hide");
+      });
+    });
+    // 解构赋值
+    let [a, ...arr8] = ['后盾人', 'houdunren', 'hdcms'];
+    console.log(arr8); // ['houdunren', 'hdcms']
+
+    const [...arr9] = "hdcms";
+    console.log(arr9); // ["h", "d", "c", "m", "s"]
+
+  </script>
+</body>
+
+</html>
