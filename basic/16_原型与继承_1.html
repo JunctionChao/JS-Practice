@@ -12,6 +12,8 @@
   <button message="hdcms">hdcms</button>
   <script>
     // 原型对象
+    // https://zhuanlan.zhihu.com/p/23090041
+    // https://zhuanlan.zhihu.com/p/248843267
 
     // 可以将原型理解为对象的父亲，对象从原型对象继承来属性
     // 原型就是对象除了是某个对象的父母外没有什么特别之处
@@ -26,6 +28,7 @@
     console.log(Object.getPrototypeOf(hd1)); // 获取对象的原型对象
     console.log(hd1.__proto__);
     console.log(Object.getPrototypeOf(hd1) == hd1.__proto__); // true
+    // console.dir()可以显示一个对象的所有属性和方法
     console.dir(hd1);
 
     // 以下x、y的原型都为元对象Object，即JS中的根对象

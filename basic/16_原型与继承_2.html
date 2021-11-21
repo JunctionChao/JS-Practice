@@ -31,6 +31,185 @@
     User.show();
     u = new User(); // houdunren.com
     u.show(); // houdunren.com
+
+
+    // 通过原型链来实现继承
+    function User() {}
+    User.prototype.getName = function() {
+      return this.name;
+    };
+
+    function Stu(name) {
+      this.name = name;
+    }
+    Stu.prototype = new User();
+
+    // 第二种方式
+    // Stu.prototype.__proto__ = User.prototype;
+    // 下面这种继承方式不会带上constructor函数
+    // Stu.prototype = Object.create(User.prototype);
+    // Stu.prototype.constructor = Stu;
+    const lisi = new Stu("李四");
+    console.log(lisi.__proto__);
+    console.log(lisi.getName());
+
+
+    // 多种方式通过构造函数创建对象
+    function Admin() {}
+    console.log(Admin == Admin.prototype.constructor); //true
+
+    let hd = new Admin.prototype.constructor();
+    console.log(hd);
+
+    let xj = new Admin();
+    console.log(xj);
+
+    // 继承中使用父类构造函数来初始化属性
+    function User(name) {
+      this.name = name;
+      console.log(this);
+    }
+    User.prototype.getUserName = function() {
+      return this.name;
+    };
+
+    function Admin(name) {
+      User.call(this, name);
+    }
+    Admin.prototype = Object.create(User.prototype);
+    let xj = new Admin("xj");
+    console.log(xj.getUserName()); //xj
+
+
+    // 原型工厂是将继承的过程封装，使用继承业务简单化。
+    function extend(sub, sup) {
+      sub.prototype = Object.create(sup.prototype);
+      Object.defineProperty(sub.prototype, "constructor", {
+        value: sub,
+        enumerable: false
+      });
+    }
+
+    function Access() {}
+    function User() {}
+    function Admin() {}
+    function Member() {}
+
+    extend(User, Access); //User继承Access
+    extend(Admin, User); //Admin继承User
+    extend(Member, Access); //Member继承Access
+
+    Access.prototype.rules = function() {};
+    User.prototype.getName = function() {};
+
+    console.log(new Admin()); // 继承关系: Admin>User>Access>Object
+    console.log(new Member()); //继承关系：Member>Access>Object
+
+
+    // 对象工厂
+    // 在原型继承基础上，将对象的生成使用函数完成，并在函数内部为对象添加属性或方法。
+    function User(name, age) {
+      this.name = name;
+      this.age = age;
+    }
+    User.prototype.show = function() {
+      console.log(this.name, this.age);
+    };
+
+    function admin(name, age) {
+      let instance = Object.create(User.prototype);
+      // 下面的方式效果一样
+      // let instance = {};
+      // instance.__proto__ == User.prototype;
+      User.call(instance, name, age);
+      instance.role=function(){
+        console.log('admin.role');
+      }
+      return instance;
+    }
+    let hd = admin("后盾人", 19);
+    hd.show();
+
+    function member(name, age) {
+      let instance = Object.create(User.prototype);
+      User.call(instance, name, age);
+      return instance;
+    }
+    let lisi = member("李四", 28);
+    lisi.show();
+
+    // Mixin模式
+    // JS不能实现多继承，如果要使用多个类的方法时可以使用mixin混合模式来完成
+    function extend(sub, sup) {
+      sub.prototype = Object.create(sup.prototype);
+      Object.defineProperty(sub.prototype, "constructor", {
+        value: sub,
+        enumerable: false
+      });
+    }
+    function User(name, age) {
+      this.name = name;
+      this.age = age;
+    }
+    User.prototype.show = function() {
+      console.log(this.name, this.age);
+    };
+    const Credit = {
+      total() {
+        console.log("统计积分");
+      }
+    };
+    const Request = {
+      ajax() {
+        console.log("请求后台");
+      }
+    };
+
+    function Admin(...args) {
+      User.apply(this, args);
+    }
+    extend(Admin, User);
+    Object.assign(Admin.prototype, Request, Credit); // 将其他对象的属性添加到需要的原型中
+    let hd = new Admin("向军", 19);
+    hd.show();
+    hd.total(); //统计积分
+    hd.ajax(); //请求后台
+
+    // mixin 类也可以继承其他类，比如下面的 Create 类获取积分要请求后台，就需要继承 Request 来完成
+    // super 是在 mixin 类的原型中查找，而不是在 User 原型中
+    function extend(sub, sup) {
+      sub.prototype = Object.create(sup.prototype);
+      sub.prototype.constructor = sub;
+    }
+    function User(name, age) {
+      this.name = name;
+      this.age = age;
+    }
+    User.prototype.show = function() {
+      console.log(this.name, this.age);
+    };
+    const Request = {
+      ajax() {
+        return "请求后台";
+      }
+    };
+    const Credit = {
+      __proto__: Request,
+      total() {
+        // console.log(this.__proto__.ajax() + "统计积分");
+        console.log(super.ajax() + "统计积分");
+      }
+    };
+
+    function Admin(...args) {
+      User.apply(this, args);
+    }
+    extend(Admin, User);
+    Object.assign(Admin.prototype, Request, Credit);
+    let hd = new Admin("向军", 19);
+    hd.show();
+    hd.total(); //统计积分
+    hd.ajax(); //请求后台
   </script>
 </body>
 
